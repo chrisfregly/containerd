@@ -64,7 +64,7 @@ func TestMultipleRuntimesHandler(t *testing.T) {
 		if rt == "" {
 			t.Logf("The --runtime-handler flag value is empty which results internally to setting the default runtime")
 		} else {
-			t.Logf("The --runtime-handler flag value is %s", *runtimeHandler)
+			t.Logf("The --runtime-handler flag value is %s", rt)
 		}
 		sb, err := runtimeService.RunPodSandbox(sbConfig, rt)
 		require.NoError(t, err)
