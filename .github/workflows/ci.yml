@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - more-runtime-tests
       - 'release/**'
   pull_request:
     branches:
