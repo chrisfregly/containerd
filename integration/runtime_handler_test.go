@@ -77,11 +77,11 @@ func TestMultipleRuntimesHandler(t *testing.T) {
 		t.Logf("Verify runtimeService.PodSandboxStatus() returns previously set runtimeHandler")
 		sbStatus, err := runtimeService.PodSandboxStatus(sb)
 		require.NoError(t, err)
-		assert.Equal(t, *runtimeHandler, sbStatus.RuntimeHandler)
+		assert.Equal(t, rt, sbStatus.RuntimeHandler)
 
 		t.Logf("Verify runtimeService.ListPodSandbox() returns previously set runtimeHandler")
 		sandboxes, err := runtimeService.ListPodSandbox(&runtime.PodSandboxFilter{})
 		require.NoError(t, err)
-		assert.Equal(t, *runtimeHandler, sandboxes[idx].RuntimeHandler)
+		assert.Equal(t, rt, sandboxes[idx].RuntimeHandler)
 	}
 }
