@@ -19,6 +19,7 @@
 package integration
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -53,4 +54,34 @@ func TestRuntimeHandler(t *testing.T) {
 	sandboxes, err := runtimeService.ListPodSandbox(&runtime.PodSandboxFilter{})
 	require.NoError(t, err)
 	assert.Equal(t, *runtimeHandler, sandboxes[0].RuntimeHandler)
+}
+
+func TestMultipleRuntimesHandler(t *testing.T) {
+	runtimes := []string{*runtimeHandler, "runc"}
+	for idx, runtime := range runtimes {
+		t.Logf("Create a sandbox")
+		sbConfig := PodSandboxConfig(fmt.Sprintf("sandbox-%d", idx), fmt.Sprintf("test-runtime-handler-%d", idx))
+		if *runtimeHandler == "" {
+			t.Logf("The --runtime-handler flag value is empty which results internally to setting the default runtime")
+		} else {
+			t.Logf("The --runtime-handler flag value is %s", *runtimeHandler)
+		}
+		sb, err := runtimeService.RunPodSandbox(sbConfig, runtime)
+		require.NoError(t, err)
+		defer func() {
+			// Make sure the sandbox is cleaned up in any case.
+			runtimeService.StopPodSandbox(sb)
+			runtimeService.RemovePodSandbox(sb)
+		}()
+
+		t.Logf("Verify runtimeService.PodSandboxStatus() returns previously set runtimeHandler")
+		sbStatus, err := runtimeService.PodSandboxStatus(sb)
+		require.NoError(t, err)
+		assert.Equal(t, *runtimeHandler, sbStatus.RuntimeHandler)
+
+		t.Logf("Verify runtimeService.ListPodSandbox() returns previously set runtimeHandler")
+		sandboxes, err := runtimeService.ListPodSandbox(&runtime.PodSandboxFilter{})
+		require.NoError(t, err)
+		assert.Equal(t, *runtimeHandler, sandboxes[idx].RuntimeHandler)
+	}
 }
