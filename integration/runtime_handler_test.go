@@ -58,7 +58,7 @@ func TestRuntimeHandler(t *testing.T) {
 
 func TestMultipleRuntimesHandler(t *testing.T) {
 	runtimes := []string{*runtimeHandler, "runc"}
-	for idx, runtime := range runtimes {
+	for idx, rt := range runtimes {
 		t.Logf("Create a sandbox")
 		sbConfig := PodSandboxConfig(fmt.Sprintf("sandbox-%d", idx), fmt.Sprintf("test-runtime-handler-%d", idx))
 		if *runtimeHandler == "" {
@@ -66,7 +66,7 @@ func TestMultipleRuntimesHandler(t *testing.T) {
 		} else {
 			t.Logf("The --runtime-handler flag value is %s", *runtimeHandler)
 		}
-		sb, err := runtimeService.RunPodSandbox(sbConfig, runtime)
+		sb, err := runtimeService.RunPodSandbox(sbConfig, rt)
 		require.NoError(t, err)
 		defer func() {
 			// Make sure the sandbox is cleaned up in any case.
