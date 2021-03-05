@@ -19,7 +19,6 @@
 package integration
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -58,10 +57,12 @@ func TestRuntimeHandler(t *testing.T) {
 
 func TestMultipleRuntimesHandler(t *testing.T) {
 	runtimes := []string{*runtimeHandler, "runc"}
+	t.Logf("Create a sandbox")
+	sbConfig := PodSandboxConfig("sandbox", "test-runtime-handler")
 	for idx, rt := range runtimes {
-		t.Logf("Create a sandbox")
-		sbConfig := PodSandboxConfig(fmt.Sprintf("sandbox-%d", idx), fmt.Sprintf("test-runtime-handler-%d", idx))
-		if *runtimeHandler == "" {
+		// t.Logf("Create a sandbox")
+		// sbConfig := PodSandboxConfig(fmt.Sprintf("sandbox-%d", idx), fmt.Sprintf("test-runtime-handler-%d", idx))
+		if rt == "" {
 			t.Logf("The --runtime-handler flag value is empty which results internally to setting the default runtime")
 		} else {
 			t.Logf("The --runtime-handler flag value is %s", *runtimeHandler)
