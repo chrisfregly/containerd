@@ -53,6 +53,15 @@ func TestRuntimes(t *testing.T) {
 		t.Logf("Verify runtimeService.ListPodSandbox() returns previously set runtimeHandler")
 		sandboxes, err := runtimeService.ListPodSandbox(&runtime.PodSandboxFilter{})
 		require.NoError(t, err)
-		assert.Equal(t, rt, sandboxes[idx].RuntimeHandler)
+		assert.Equal(t, true, contains(sandboxes, rt))
 	}
+}
+
+func contains(l []*runtime.PodSandbox, item string) bool {
+	for _, val := range l {
+		if val.RuntimeHandler == item {
+			return true
+		}
+	}
+	return false
 }
