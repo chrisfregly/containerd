@@ -86,7 +86,7 @@ func TestMultipleRuntimesHandler(t *testing.T) {
 	}
 }
 
-func contains(l []*runtime.PortForwardResponse, item string) bool {
+func contains(l []*runtime.PodSandbox, item string) bool {
 	for _, val := range l {
 		if val.RuntimeHandler == item {
 			return true
